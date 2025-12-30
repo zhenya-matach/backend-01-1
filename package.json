@@ -1,0 +1,14 @@
+{
+  "name": "backend-01-1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/zhenya-matach/backend-01-1.git",
+  "author": "Yauheni Matach <zhenya.matach@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

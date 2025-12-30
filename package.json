@@ -5,6 +5,10 @@
   "repository": "https://github.com/zhenya-matach/backend-01-1.git",
   "author": "Yauheni Matach <zhenya.matach@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "watch": "tsc -w",
+    "dev": "nodemon --inspect dist/index.js"
+  },
   "dependencies": {
     "express": "^5.2.1"
   },

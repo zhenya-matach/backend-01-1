@@ -9,7 +9,8 @@ export const db = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createdAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString()
+            publicationDate: new Date().toISOString(),
+            availableResolutions: [availableResolutions.P720]
         },
         {
             id: 2,
@@ -18,7 +19,8 @@ export const db = {
             canBeDownloaded: false,
             minAgeRestriction: 16,
             createdAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString()
+            publicationDate: new Date().toISOString(),
+            availableResolutions: [availableResolutions.P1080]
         }
     ]
-}
+};

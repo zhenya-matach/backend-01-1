@@ -1,4 +1,4 @@
-import {Video, availableResolutions} from "../videos/types/video";
+import {Video, availableResolutions} from "../types/video";
 
 export const db = {
     videos: <Video[]>[
@@ -9,7 +9,7 @@ export const db = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createdAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
+            publicationDate: new Date(Date.now() + 86400000).toISOString(),
             availableResolutions: [availableResolutions.P720]
         },
         {
@@ -19,7 +19,7 @@ export const db = {
             canBeDownloaded: false,
             minAgeRestriction: 16,
             createdAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
+            publicationDate: new Date(Date.now() + 86400000).toISOString(),
             availableResolutions: [availableResolutions.P1080]
         }
     ]

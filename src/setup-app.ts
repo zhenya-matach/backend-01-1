@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
-import { HttpStatus } from './core/types/http-statutes';
-import { db } from './db/in-memory.db';
-import { Video } from './videos/types/video';
+import { HttpStatus } from './core/types/httpStatutes';
+import { db } from './db/videos/inMemory.db';
+import { Video } from './db/types/video';
 
 export const setupApp = (app: Express) => {
     app.use(express.json()); // middleware для парсинга JSON в теле запроса
@@ -30,10 +30,10 @@ export const setupApp = (app: Express) => {
             id: db.videos.length ? db.videos[db.videos.length - 1].id + 1 : 1,
             title: req.body.title,
             author: req.body.author,
-            canBeDownloaded: req.body.canBeDownloaded,
-            minAgeRestriction: req.body.minAgeRestriction,
+            canBeDownloaded: false,
+            minAgeRestriction: null,
             createdAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
+            publicationDate: new Date(Date.now() + 86400000).toISOString(),
             availableResolutions: req.body.availableResolutions
         };
         db.videos.push(newVideo);
@@ -72,6 +72,5 @@ export const setupApp = (app: Express) => {
 
     //--------
 
-    app.get
     return app;
 };

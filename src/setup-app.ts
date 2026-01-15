@@ -2,6 +2,8 @@ import express, { Express, Request, Response } from 'express';
 import { HttpStatus } from './core/types/httpStatutes';
 import { db } from './db/videos/inMemory.db';
 import { Video } from './db/types/video';
+import {createVideoInputValidation} from "./videos/validation/createVideoInputValidation";
+import {createErrorMessages} from "./core/utils/errorsCreator";
 
 export const setupApp = (app: Express) => {
     app.use(express.json()); // middleware для парсинга JSON в теле запроса
@@ -26,6 +28,13 @@ export const setupApp = (app: Express) => {
     //---------
 
     app.post('/videos', (req: Request, res: Response) => {
+        const errors = createVideoInputValidation(req.body);
+
+        if (errors.length > 0) {
+            res.status(HttpStatus.BadRequest).send(createErrorMessages(errors));
+            return;
+        }
+
         const newVideo: Video = {
             id: db.videos.length ? db.videos[db.videos.length - 1].id + 1 : 1,
             title: req.body.title,

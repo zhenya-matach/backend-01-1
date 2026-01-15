@@ -45,13 +45,18 @@ export const setupApp = (app: Express) => {
     app.put('/videos/:id', (req: Request, res:Response) => {
         const index = db.videos.findIndex((v) => v.id === +req.params.id);
         const video = db.videos[index];
-        video.title = req.body.title;
-        video.author = req.body.author;
-        video.availableResolutions = req.body.availableResolutions;
-        video.canBeDownloaded = req.body.canBeDownloaded;
-        video.minAgeRestriction = req.body.minAgeRestriction;
-        video.publicationDate = new Date().toISOString();
+        const updatedVideo: Video = {
+            id: video.id,
+            title: req.body.title || video.title,
+            author: req.body.author || video.author,
+            canBeDownloaded: req.body.canBeDownloaded || video.canBeDownloaded,
+            minAgeRestriction: req.body.minAgeRestriction || video.minAgeRestriction,
+            createdAt: video.createdAt,
+            publicationDate: req.body.publicationDate || video.publicationDate,
+            availableResolutions: req.body.availableResolutions || video.availableResolutions
+        };
 
+        Object.assign(video, updatedVideo);
         res.sendStatus(HttpStatus.NoContent);
     });
 
@@ -69,8 +74,6 @@ export const setupApp = (app: Express) => {
         db.videos = [];
         res.sendStatus(HttpStatus.NoContent);
     });
-
-    //--------
 
     return app;
 };

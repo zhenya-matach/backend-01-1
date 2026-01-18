@@ -1,25 +1,41 @@
-import express, { Express, Request, Response } from 'express';
-import { HttpStatus } from './core/types/httpStatutes';
-import { db } from './db/videos/inMemory.db';
-import { Video } from './db/types/video';
+import express, {Express, Request, Response} from 'express';
+import {HttpStatus} from './core/types/httpStatutes';
+import {db} from './db/videos/inMemory.db';
+import {Video} from './db/types/video';
 import {createVideoInputValidation} from "./videos/validation/createVideoInputValidation";
 import {createErrorMessages} from "./core/utils/errorsCreator";
+import {updateVideoInputValidation} from "./videos/validation/updateVideoInputValidation";
 
 export const setupApp = (app: Express) => {
     app.use(express.json()); // middleware для парсинга JSON в теле запроса
 
-    app.get ('/', (req: Request, res: Response) => {
-        res.status(HttpStatus.Ok).send ("Hello World!");
+    app.get('/', (req: Request, res: Response) => {
+        res.status(HttpStatus.Ok).send("Hello World!");
     });
 
-    app.get ('/videos', (req: Request, res: Response) => {
+    app.get('/videos', (req: Request, res: Response) => {
         res.status(HttpStatus.Ok).send(db.videos);
     })
 
-    app.get ('/videos/:id', (req: Request, res: Response) => {
-        const video = db.videos.find((v) => v.id === +req.params.id);
+    app.get('/videos/:id', (req: Request, res: Response) => {
+        const id = +req.params.id;
+        const video = db.videos.find((v) => v.id === id);
+
+        if (!id) {
+            res
+                .status(HttpStatus.BadRequest)
+                .send(
+                    createErrorMessages([{field: 'id', message: 'Неверно указан ID'}])
+                );
+            return;
+        }
+
         if (!video) {
-            res.sendStatus(HttpStatus.NotFound);
+            res
+                .status(HttpStatus.NotFound)
+                .send(
+                    createErrorMessages([{field: 'id', message: 'Видео не найдено'}])
+                );
             return;
         }
         res.status(HttpStatus.Ok).send(video);
@@ -51,7 +67,15 @@ export const setupApp = (app: Express) => {
 
     //---------
 
-    app.put('/videos/:id', (req: Request, res:Response) => {
+    app.put('/videos/:id', (req: Request, res: Response) => {
+
+        const errors = updateVideoInputValidation(req.body);
+
+        if (errors.length > 0) {
+            res.status(HttpStatus.BadRequest).send(createErrorMessages(errors));
+            return;
+        }
+
         const index = db.videos.findIndex((v) => v.id === +req.params.id);
         const video = db.videos[index];
         const updatedVideo: Video = {
@@ -73,6 +97,9 @@ export const setupApp = (app: Express) => {
 
     app.delete('/videos/:id', (req: Request, res: Response) => {
         const index = db.videos.findIndex((v) => v.id === +req.params.id);
+        if (index === -1) {
+            res.sendStatus(HttpStatus.NotFound);
+        }
         db.videos.splice(index, 1);
         res.sendStatus(HttpStatus.NoContent);
     });

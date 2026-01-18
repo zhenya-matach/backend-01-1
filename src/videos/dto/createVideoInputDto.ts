@@ -1,6 +1,6 @@
-import { availableResolutions } from '../../db/types/video';
+import {availableResolutions} from '../../db/types/video';
 
-export type createVideoInputDto = {
+export type CreateVideoInputDto = {
     title: string;
     author: string;
     availableResolutions: availableResolutions[];

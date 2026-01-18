@@ -1,4 +1,4 @@
-import { availableResolutions } from '../../db/types/video';
+import {availableResolutions} from '../../db/types/video';
 
 export type UpdateVideoInputDto = {
     title: string;

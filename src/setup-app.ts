@@ -10,11 +10,11 @@ export const setupApp = (app: Express) => {
     app.use(express.json()); // middleware для парсинга JSON в теле запроса
 
     app.get('/', (req: Request, res: Response) => {
-        res.status(HttpStatus.Ok).send("Hello World!");
+        res.status(HttpStatus.Ok_200).send("Hello World!");
     });
 
     app.get('/videos', (req: Request, res: Response) => {
-        res.status(HttpStatus.Ok).send(db.videos);
+        res.status(HttpStatus.Ok_200).send(db.videos);
     })
 
     app.get('/videos/:id', (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ export const setupApp = (app: Express) => {
 
         if (!id) {
             res
-                .status(HttpStatus.BadRequest)
+                .status(HttpStatus.BadRequest_400)
                 .send(
                     createErrorMessages([{field: 'id', message: 'Неверно указан ID'}])
                 );
@@ -32,13 +32,13 @@ export const setupApp = (app: Express) => {
 
         if (!video) {
             res
-                .status(HttpStatus.NotFound)
+                .status(HttpStatus.NotFound_404)
                 .send(
                     createErrorMessages([{field: 'id', message: 'Видео не найдено'}])
                 );
             return;
         }
-        res.status(HttpStatus.Ok).send(video);
+        res.status(HttpStatus.Ok_200).send(video);
     });
 
     //---------
@@ -47,7 +47,7 @@ export const setupApp = (app: Express) => {
         const errors = createVideoInputValidation(req.body);
 
         if (errors.length > 0) {
-            res.status(HttpStatus.BadRequest).send(createErrorMessages(errors));
+            res.status(HttpStatus.BadRequest_400).send(createErrorMessages(errors));
             return;
         }
 
@@ -62,7 +62,7 @@ export const setupApp = (app: Express) => {
             availableResolutions: req.body.availableResolutions
         };
         db.videos.push(newVideo);
-        res.status(HttpStatus.Created).send(newVideo);
+        res.status(HttpStatus.Created_201).send(newVideo);
     });
 
     //---------
@@ -72,7 +72,7 @@ export const setupApp = (app: Express) => {
         const errors = updateVideoInputValidation(req.body);
 
         if (errors.length > 0) {
-            res.status(HttpStatus.BadRequest).send(createErrorMessages(errors));
+            res.status(HttpStatus.BadRequest_400).send(createErrorMessages(errors));
             return;
         }
 
@@ -90,7 +90,7 @@ export const setupApp = (app: Express) => {
         };
 
         Object.assign(video, updatedVideo);
-        res.sendStatus(HttpStatus.NoContent);
+        res.sendStatus(HttpStatus.NoContent_204);
     });
 
     //---------
@@ -98,17 +98,17 @@ export const setupApp = (app: Express) => {
     app.delete('/videos/:id', (req: Request, res: Response) => {
         const index = db.videos.findIndex((v) => v.id === +req.params.id);
         if (index === -1) {
-            res.sendStatus(HttpStatus.NotFound);
+            res.sendStatus(HttpStatus.NotFound_404);
         }
         db.videos.splice(index, 1);
-        res.sendStatus(HttpStatus.NoContent);
+        res.sendStatus(HttpStatus.NoContent_204);
     });
 
     //---------
 
     app.delete('/testing/all-data', (req: Request, res: Response) => {
         db.videos = [];
-        res.sendStatus(HttpStatus.NoContent);
+        res.sendStatus(HttpStatus.NoContent_204);
     });
 
     return app;

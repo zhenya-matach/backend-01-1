@@ -1,10 +1,10 @@
 export enum HttpStatus {
-    Ok = 200,
-    Created = 201,
-    NoContent = 204,
+    Ok_200 = 200,
+    Created_201 = 201,
+    NoContent_204 = 204,
 
-    BadRequest = 400,
-    NotFound = 404,
+    BadRequest_400 = 400,
+    NotFound_404 = 404,
 
-    InternalServerError = 500
+    InternalServerError_500 = 500
 }

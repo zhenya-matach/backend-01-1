@@ -22,7 +22,7 @@ describe('Video API body validation check', () => {
     };
 
     it('should not create video when incorrect body passed; POST /videos', async () => {
-        const indalidCreateDataSet1 = await request(app)
+        const invalidCreateDataSet1 = await request(app)
             .post('/videos')
             .send({
                 ...correctCreateVideoData,
@@ -31,9 +31,9 @@ describe('Video API body validation check', () => {
                 availableResolutions: '  ',
             })
             .expect(HttpStatus.BadRequest_400);
-        expect(indalidCreateDataSet1.body.errorMessages).toHaveLength(3);
+        expect(invalidCreateDataSet1.body.errorMessages).toHaveLength(3);
 
-        const indalidCreateDataSet2 = await request(app)
+        const invalidCreateDataSet2 = await request(app)
             .post('/videos')
             .send({
                 ...correctCreateVideoData,
@@ -41,9 +41,9 @@ describe('Video API body validation check', () => {
                 availableResolutions: 'P240',
             })
             .expect(HttpStatus.BadRequest_400);
-        expect(indalidCreateDataSet2.body.errorMessages).toHaveLength(2);
+        expect(invalidCreateDataSet2.body.errorMessages).toHaveLength(2);
 
-        const indalidCreateDataSet3 = await request(app)
+        const invalidCreateDataSet3 = await request(app)
             .post('/videos')
             .send({
                 ...correctCreateVideoData,
@@ -51,7 +51,7 @@ describe('Video API body validation check', () => {
                 author: 'kkkkkkkkkkkkkkkkkkkkk',
             })
             .expect(HttpStatus.BadRequest_400)
-        expect(indalidCreateDataSet3.body.errorMessages).toHaveLength(2);
+        expect(invalidCreateDataSet3.body.errorMessages).toHaveLength(2);
 
         const videoListResponse = await request(app).get('/videos');
         expect(videoListResponse.body).toHaveLength(0);
@@ -74,21 +74,21 @@ describe('Video API body validation check', () => {
             })
             .expect(HttpStatus.Created_201);
 
-        const videoResponse = await request(app).get('/videos');
-        expect(videoResponse.body).toHaveLength(1);
+        const createdVideo = await request(app).get('/videos');
+        expect(createdVideo.body).toHaveLength(1);
 
         const invalidUpdateDataSet1 = await request(app)
-            .put('/videos/' + videoResponse.body.id)
+            .put('/videos/' + createdVideo.body.id)
             .send({
                 ...correctUpdateVideoData,
                 author: 18,
-                minAgeRestriction: 20,
+                minAgeRestriction: 21,
             })
             .expect(HttpStatus.BadRequest_400);
         expect(invalidUpdateDataSet1.body.errorMessages).toHaveLength(2);
 
         const invalidUpdateDataSet2 = await request(app)
-            .put('/videos/' + videoResponse.body.id)
+            .put('/videos/' + createdVideo.body.id)
             .send({
                 ...correctUpdateVideoData,
                 availableResolutions: 'P720',
@@ -100,7 +100,7 @@ describe('Video API body validation check', () => {
         expect(invalidUpdateDataSet2.body.errorMessages).toHaveLength(4);
 
         const invalidUpdateDataSet3 = await request(app)
-            .put('/videos/' + videoResponse.body.id)
+            .put('/videos/' + createdVideo.body.id)
             .send({
                 ...correctUpdateVideoData,
                 title: '',

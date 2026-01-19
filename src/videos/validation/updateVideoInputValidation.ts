@@ -51,15 +51,15 @@ export const updateVideoInputValidation = (data: UpdateVideoInputDto): Validatio
 
     if (typeof data.minAgeRestriction !== 'number') {
         errors.push({field: 'minAgeRestriction', message: 'Неверный тип данных'})
-    } else if (data.minAgeRestriction < 1 && data.minAgeRestriction > 18) {
+    } else if (data.minAgeRestriction < 1 || data.minAgeRestriction > 18) {
         errors.push({field: 'minAgeRestriction', message: 'Недопустимое значение'})
     }
 
     if (typeof data.publicationDate !== 'string') {
         errors.push({field: 'publicationDate', message: 'Неверный тип данных'});
     } else if (
-        data.publicationDate.length < 24 &&
-        !data.publicationDate.includes('-') &&
+        data.publicationDate.length < 24 ||
+        !data.publicationDate.includes('-') ||
         !data.publicationDate.includes(':')
     ) {
         errors.push({field: 'publicationDate', message: 'Неверное значение'});

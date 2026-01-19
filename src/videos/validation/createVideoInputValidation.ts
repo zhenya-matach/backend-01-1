@@ -9,6 +9,8 @@ export const createVideoInputValidation = (data: CreateVideoInputDto): Validatio
         errors.push({field: 'title', message: 'Необходимо указать title'});
     } else if (typeof data.title !== 'string') {
         errors.push({field: 'title', message: 'Неверный тип данных'});
+    } else if (data.title.trim().length === 0) {
+        errors.push({field: 'title', message: 'Поле не может быть пустым'});
     } else if (data.title.trim().length > 40) {
         errors.push({field: 'title', message: 'Максимальная длина: 40 символов'});
     }
@@ -17,6 +19,8 @@ export const createVideoInputValidation = (data: CreateVideoInputDto): Validatio
         errors.push({field: 'author', message: 'Необходимо указать author'});
     } else if (typeof data.author !== 'string') {
         errors.push({field: 'author', message: 'Неверный тип данных'});
+    } else if (data.author.trim().length === 0) {
+            errors.push({field: 'author', message: 'Поле не может быть пустым'});
     } else if (data.author.trim().length > 20) {
         errors.push({field: 'author', message: 'Максимальная длина: 20 символов'});
     }

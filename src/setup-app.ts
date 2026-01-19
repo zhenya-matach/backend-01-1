@@ -77,6 +77,10 @@ export const setupApp = (app: Express) => {
         }
 
         const index = db.videos.findIndex((v) => v.id === +req.params.id);
+        if (index === -1) {
+            res.sendStatus(HttpStatus.NotFound_404);
+        }
+
         const video = db.videos[index];
         const updatedVideo: Video = {
             id: video.id,
